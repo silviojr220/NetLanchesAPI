@@ -1,10 +1,242 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NetLanches</title>
+
+    <link rel="icon" type="image/png" href="img/logo.png" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
 </head>
+
 <body>
+
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+
+            <div>
+
+                <div class="sidebar-header">
+
+                    <h3 class="sidebar-title">
+                        <i class="bi bi-journal-text"></i>
+                        Cardápio
+                    </h3>
+
+                    <button class="toggle-btn"
+                            onclick="toggleSidebar()">
+
+                        <i class="bi bi-list"></i>
+
+                    </button>
+
+                </div>
+
+                <div id="menuProdutos"></div>
+
+            </div>
+
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main-content">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+
+                <div class="user-box">
+
+                    <div class="avatar">
+                        <i class="bi bi-person-circle"></i>
+                    </div>
+
+                    <div>
+
+                        <small>Bem-vindo</small>
+
+                        <h6 id="nomeUsuario">
+                            Cliente
+                        </h6>
+
+                    </div>
+
+                </div>
+
+                <button class="btn btn-danger"
+                        onclick="logout()">
+
+                    <i class="bi bi-box-arrow-right"></i>
+                    Sair
+
+                </button>
+
+            </div>
+
+            <!-- HERO -->
+            <section class="hero">
+
+                <div>
+
+                    <h1>
+                        <i class="bi bi-basket2-fill"></i>
+                        Os melhores lanches
+                    </h1>
+
+                    <p>
+                        Monte seu pedido da forma que quiser.
+                    </p>
+
+                </div>
+
+            </section>
+
+            <!-- CAROUSEL -->
+            <section>
+
+                <div class="carousel-header">
+
+                    <h4 class="section-title">
+
+                        <i class="bi bi-stars"></i>
+                        Destaques
+
+                    </h4>
+
+                    <div class="carousel-controls">
+
+                        <button onclick="scrollCarousel(-1)">
+
+                            <i class="bi bi-chevron-left"></i>
+
+                        </button>
+
+                        <button onclick="scrollCarousel(1)">
+
+                            <i class="bi bi-chevron-right"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="carousel-wrapper">
+
+                    <div class="carousel-produtos"
+                         id="carouselProdutos">
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- PRODUTO -->
+            <section class="produto-area">
+
+                <div id="produtoSelecionado">
+
+                    <div class="empty-state">
+
+                        <h4>
+
+                            <i class="bi bi-bag-heart-fill"></i>
+                            Escolha um produto
+
+                        </h4>
+
+                        <p>
+                            Clique em algum item do cardápio.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- CARRINHO -->
+            <section class="carrinho-section">
+
+                <div class="carrinho-card">
+
+                    <h4>
+
+                        <i class="bi bi-cart3"></i>
+                        Carrinho
+
+                    </h4>
+
+                    <div id="carrinho"></div>
+
+                    <div id="total"
+                         class="total">
+
+                        Total: R$ 0,00
+
+                    </div>
+
+                    <button class="btn-finalizar"
+                            onclick="finalizarPedido()">
+
+                        <i class="bi bi-check-circle-fill"></i>
+                        Finalizar Pedido
+
+                    </button>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- TOAST -->
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+
+        <div id="toast"
+             class="toast border-0 text-white"
+             role="alert">
+
+            <div class="d-flex">
+
+                <div class="toast-body"
+                     id="toastBody">
+
+                    Mensagem
+
+                </div>
+
+                <button type="button"
+                        class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast">
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- BOOTSTRAP JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="js/app.js"></script>
 
 </body>
 </html>
