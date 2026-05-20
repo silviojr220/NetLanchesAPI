@@ -1,4 +1,5 @@
-﻿namespace NetLanchesAPI.DTOs.Usuario;
+﻿using NetLanchesAPI.Models.Enums;
+namespace NetLanchesAPI.DTOs.Usuario;
 
 public class UsuarioDTO
 {

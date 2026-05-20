@@ -17,4 +17,37 @@ public class AppDbContext : DbContext
     public DbSet<Pedido> Pedidos { get; set; }
 
     public DbSet<ItemPedido> ItensPedido { get; set; }
+
+    protected override void OnModelCreating(
+    ModelBuilder modelBuilder
+)
+    {
+        modelBuilder.Entity<Pedido>()
+            .Property(p => p.Status)
+            .HasConversion<string>();
+
+
+        modelBuilder.Entity<Usuario>()
+            .Property(u => u.Perfil)
+            .HasConversion<string>();
+
+        // PEDIDO -> USUARIO
+
+        modelBuilder.Entity<Pedido>()
+            .HasOne(p => p.Usuario)
+            .WithMany()
+            .HasForeignKey(p => p.UsuarioId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        // ITEMPEDIDO -> PRODUTO
+
+        modelBuilder.Entity<ItemPedido>()
+            .HasOne(i => i.Produto)
+            .WithMany()
+            .HasForeignKey(i => i.ProdutoId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        base.OnModelCreating(modelBuilder);
+    }
 }

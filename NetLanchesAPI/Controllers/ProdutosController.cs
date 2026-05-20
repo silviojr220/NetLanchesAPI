@@ -20,7 +20,7 @@ public class ProdutosController : ControllerBase
     /// <summary>
     /// Lista todos os produtos.
     /// </summary>
-    [Authorize(Roles = $"{Roles.SUPERADM}, {Roles.ADM}, {Roles.FUNCIONARIO}, {Roles.CLIENTE}")]
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -32,7 +32,7 @@ public class ProdutosController : ControllerBase
     /// <summary>
     /// Seleciona um produto pelo ID.
     /// </summary>
-    [Authorize(Roles = $"{Roles.SUPERADM}, {Roles.ADM}")]
+    [AllowAnonymous]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
@@ -63,7 +63,7 @@ public class ProdutosController : ControllerBase
     /// <summary>
     /// Atualiza um produto pelo ID.
     /// </summary>
-    [Authorize(Roles = $"{Roles.SUPERADM}, {Roles.ADM}")]
+    [Authorize(Roles = $"{Roles.SUPERADM},{Roles.ADM}")]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, ProdutoDTO dto)
     {
@@ -76,9 +76,52 @@ public class ProdutosController : ControllerBase
     }
 
     /// <summary>
+    /// Faz upload de imagens (uso para o frontend)
+    /// </summary>
+    [Authorize(Roles = $"{Roles.SUPERADM},{Roles.ADM}")]
+    [HttpPost("upload")]
+    public async Task<IActionResult> UploadImagem(
+    IFormFile imagem
+)
+    {
+        if (imagem == null || imagem.Length == 0)
+            return BadRequest("Imagem inválida.");
+
+        string nomeArquivo =
+            Guid.NewGuid().ToString() +
+            Path.GetExtension(imagem.FileName);
+
+        string pastaImagens =
+            Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "wwwroot/img"
+            );
+
+        if (!Directory.Exists(pastaImagens))
+            Directory.CreateDirectory(pastaImagens);
+
+        string caminhoCompleto =
+            Path.Combine(pastaImagens, nomeArquivo);
+
+        using (var stream =
+            new FileStream(caminhoCompleto, FileMode.Create))
+        {
+            await imagem.CopyToAsync(stream);
+        }
+
+        string urlImagem =
+            $"{Request.Scheme}://{Request.Host}/img/{nomeArquivo}";
+
+        return Ok(new
+        {
+            imagemUrl = urlImagem
+        });
+    }
+
+    /// <summary>
     /// Deleta um produto pelo ID.
     /// </summary>
-    [Authorize(Roles = $"{Roles.SUPERADM}, {Roles.ADM}")]
+    [Authorize(Roles = $"{Roles.SUPERADM},{Roles.ADM}")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

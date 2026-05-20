@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
-namespace NetLanchesAPI.DTOs;
+namespace NetLanchesAPI.DTOs.Pedido;
 
 public class PedidoDTO
 {
@@ -13,6 +12,6 @@ public class ItemPedidoDTO
     [Required]
     public int ProdutoId { get; set; }
 
-    [Range(1, 100)]
+    [Range(1, 100, ErrorMessage = "Quantidade deve ser entre 1 e 100")]
     public int Quantidade { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NetLanchesAPI.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace NetLanchesAPI.Models;
 
@@ -11,7 +12,13 @@ public class Pedido
     public decimal Total { get; set; }
 
     [Required]
-    public string Status { get; set; } = "Pendente";
+    public StatusPedido Status { get; set; } 
+        = StatusPedido.PENDENTE;
 
-    public DateTime DataCriacao { get; set; } = DateTime.Now;
+    public int UsuarioId { get; set; }
+
+    public Usuario Usuario { get; set; } = null!;
+
+    public DateTime DataCriacao { get; set; }
+    = DateTime.UtcNow;
 }

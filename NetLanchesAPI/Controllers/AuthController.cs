@@ -21,7 +21,7 @@ public class AuthController : ControllerBase
     /// <summary>
     /// Registra os usuários.
     /// </summary>
-    [Authorize(Roles = $"{Roles.CLIENTE}")]
+    [AllowAnonymous]
     [HttpPost("registro")]
     public async Task<IActionResult> Registro(RegistroDTO dto)
     {
@@ -37,6 +37,7 @@ public class AuthController : ControllerBase
     /// <summary>
     /// Faz login dos usuários.
     /// </summary>
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDTO dto)
     {

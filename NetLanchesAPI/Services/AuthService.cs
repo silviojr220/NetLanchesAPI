@@ -3,6 +3,7 @@ using NetLanchesAPI.Data;
 using NetLanchesAPI.DTOs.Auth;
 using NetLanchesAPI.Models;
 using NetLanchesAPI.Services.Interfaces;
+using NetLanchesAPI.Models.Enums;
 
 namespace NetLanchesAPI.Services;
 

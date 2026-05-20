@@ -9,6 +9,8 @@ using System.Reflection;
 using System.Text;
 using BCrypt.Net;
 using NetLanchesAPI.Models;
+using NetLanchesAPI.Models.Enums;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -203,7 +205,11 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseStaticFiles();
+
 app.MapControllers();
+
+app.MapFallbackToFile("index.html");
 
 using (var scope = app.Services.CreateScope())
 {

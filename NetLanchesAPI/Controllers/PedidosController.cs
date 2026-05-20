@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using NetLanchesAPI.DTOs;
-using NetLanchesAPI.Services.Interfaces;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NetLanchesAPI.Constants;
-using Microsoft.AspNetCore.Authorization;
+using NetLanchesAPI.DTOs.Pedido;
+using NetLanchesAPI.Services.Interfaces;
+using System.Security.Claims;
 
 namespace NetLanchesAPI.Controllers;
 
@@ -20,7 +21,7 @@ public class PedidosController : ControllerBase
     /// <summary>
     /// Lista todos os pedidos.
     /// </summary>
-    [Authorize(Roles = $"{Roles.SUPERADM}, {Roles.ADM}, {Roles.FUNCIONARIO}")]
+    [Authorize(Roles = $"{Roles.SUPERADM},{Roles.ADM},{Roles.FUNCIONARIO}")]
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -32,7 +33,7 @@ public class PedidosController : ControllerBase
     /// <summary>
     /// Seleciona um pedido pelo ID.
     /// </summary>
-    [Authorize(Roles = $"{Roles.SUPERADM}, {Roles.ADM}, {Roles.FUNCIONARIO}")]
+    [Authorize(Roles = $"{Roles.SUPERADM},{Roles.ADM},{Roles.FUNCIONARIO}")]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
@@ -51,7 +52,13 @@ public class PedidosController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(PedidoDTO dto)
     {
-        var resultado = await _pedidoService.CreateAsync(dto);
+        var usuarioId = int.Parse(
+            User.FindFirst(ClaimTypes.NameIdentifier)!
+                .Value
+        );
+
+        var resultado = await _pedidoService
+            .CreateAsync(dto, usuarioId);
 
         if (!resultado.Sucesso)
             return BadRequest(resultado.Mensagem);
@@ -62,19 +69,37 @@ public class PedidosController : ControllerBase
     /// <summary>
     /// Atualiza o status do pedido.
     /// </summary>
-    [Authorize(Roles = $"{Roles.SUPERADM}, {Roles.ADM}, {Roles.FUNCIONARIO}")]
+    [Authorize(Roles = $"{Roles.SUPERADM},{Roles.ADM},{Roles.FUNCIONARIO}")]
     [HttpPut("{id}/status")]
     public async Task<IActionResult> AtualizarStatus(
         int id,
-        string status
+        AtualizarStatusPedidoDTO dto
     )
     {
         var pedido = await _pedidoService
-            .AtualizarStatusAsync(id, status);
+            .AtualizarStatusAsync(id, dto.Status);
 
         if (pedido == null)
             return NotFound("Pedido não encontrado.");
 
         return Ok(pedido);
+    }
+
+    /// <summary>
+    /// Mostra todos os pedidos do Usuario
+    /// </summary>
+    [Authorize(Roles = Roles.CLIENTE)]
+    [HttpGet("meus")]
+    public async Task<IActionResult> MeusPedidos()
+    {
+        var usuarioId = int.Parse(
+            User.FindFirst(ClaimTypes.NameIdentifier)!
+                .Value
+        );
+
+        var pedidos = await _pedidoService
+            .GetByUsuarioIdAsync(usuarioId);
+
+        return Ok(pedidos);
     }
 }

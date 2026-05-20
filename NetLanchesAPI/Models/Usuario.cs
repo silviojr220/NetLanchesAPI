@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+using NetLanchesAPI.Models.Enums;
+
 namespace NetLanchesAPI.Models;
 
 public class Usuario

@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NetLanchesAPI.Data;
-using NetLanchesAPI.DTOs;
+using NetLanchesAPI.DTOs.Pedido;
 using NetLanchesAPI.Models;
+using NetLanchesAPI.Models.Enums;
 using NetLanchesAPI.Services.Interfaces;
 
 namespace NetLanchesAPI.Services;
@@ -31,10 +32,17 @@ public class PedidoService : IPedidoService
             .FirstOrDefaultAsync(p => p.Id == id);
     }
 
-    public async Task<(bool Sucesso, string? Mensagem, Pedido? Pedido)>
-        CreateAsync(PedidoDTO dto)
+    public async Task<
+     (bool Sucesso, string? Mensagem, Pedido? Pedido)
+ > CreateAsync(
+     PedidoDTO dto,
+     int usuarioId
+ )
     {
-        Pedido pedido = new Pedido();
+        Pedido pedido = new Pedido
+        {
+            UsuarioId = usuarioId
+        };
 
         decimal total = 0;
 
@@ -74,7 +82,7 @@ public class PedidoService : IPedidoService
 
     public async Task<Pedido?> AtualizarStatusAsync(
         int id,
-        string status
+        StatusPedido status
     )
     {
         var pedido = await _context.Pedidos.FindAsync(id);
@@ -87,5 +95,15 @@ public class PedidoService : IPedidoService
         await _context.SaveChangesAsync();
 
         return pedido;
+    }
+
+    public async Task<List<Pedido>>
+    GetByUsuarioIdAsync(int usuarioId)
+    {
+        return await _context.Pedidos
+            .Where(p => p.UsuarioId == usuarioId)
+            .Include(p => p.Itens)
+            .ThenInclude(i => i.Produto)
+            .ToListAsync();
     }
 }

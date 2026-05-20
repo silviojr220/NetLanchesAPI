@@ -19,7 +19,7 @@ public class UsuarioController : ControllerBase
     /// <summary>
     /// Lista todos os usuários cadastrados.
     /// </summary>
-    [Authorize(Roles = $"{Roles.SUPERADM}, {Roles.ADM}")]
+    [Authorize(Roles = $"{Roles.SUPERADM}")]
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
