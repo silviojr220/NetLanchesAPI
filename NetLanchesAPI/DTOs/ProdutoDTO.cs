@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NetLanchesAPI.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace NetLanchesAPI.DTOs;
 
@@ -9,7 +10,7 @@ public class ProdutoDTO
     public string Nome { get; set; } = string.Empty;
 
     [Required]
-    public string Tipo { get; set; } = string.Empty;
+    public TipoProduto Tipo { get; set; }
 
     [Range(0.01, 1000)]
     public decimal Preco { get; set; }

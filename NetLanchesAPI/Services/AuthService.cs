@@ -1,31 +1,34 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NetLanchesAPI.Data;
-using NetLanchesAPI.DTOs.Auth;
+﻿using NetLanchesAPI.DTOs.Auth;
 using NetLanchesAPI.Models;
-using NetLanchesAPI.Services.Interfaces;
 using NetLanchesAPI.Models.Enums;
+using NetLanchesAPI.Repositories.Interfaces;
+using NetLanchesAPI.Services.Interfaces;
 
 namespace NetLanchesAPI.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly AppDbContext _context;
+    private readonly IUsuarioRepository _usuarioRepository;
+
     private readonly IJwtService _jwtService;
 
     public AuthService(
-        AppDbContext context,
+        IUsuarioRepository usuarioRepository,
         IJwtService jwtService
     )
     {
-        _context = context;
+        _usuarioRepository = usuarioRepository;
+
         _jwtService = jwtService;
     }
 
-    public async Task<(bool Sucesso, string Mensagem)>
-        RegistroAsync(RegistroDTO dto)
+    public async Task<
+        (bool Sucesso, string Mensagem)
+    > RegistroAsync(RegistroDTO dto)
     {
-        bool emailExiste = await _context.Usuarios
-            .AnyAsync(u => u.Email == dto.Email);
+        bool emailExiste =
+            await _usuarioRepository
+                .EmailExistsAsync(dto.Email);
 
         if (emailExiste)
         {
@@ -35,20 +38,20 @@ public class AuthService : IAuthService
             );
         }
 
-        string senhaHash =
-            BCrypt.Net.BCrypt.HashPassword(dto.Senha);
-
         Usuario usuario = new Usuario
         {
             Email = dto.Email,
-            SenhaHash = senhaHash,
+
+            SenhaHash =
+                BCrypt.Net.BCrypt.HashPassword(dto.Senha),
+
             Perfil = PerfilUsuario.CLIENTE,
+
             Telefone = dto.Telefone
         };
 
-        _context.Usuarios.Add(usuario);
-
-        await _context.SaveChangesAsync();
+        await _usuarioRepository
+            .AddAsync(usuario);
 
         return (
             true,
@@ -56,11 +59,13 @@ public class AuthService : IAuthService
         );
     }
 
-    public async Task<(bool Sucesso, object? Dados)>
-        LoginAsync(LoginDTO dto)
+    public async Task<
+        (bool Sucesso, object? Dados)
+    > LoginAsync(LoginDTO dto)
     {
-        var usuario = await _context.Usuarios
-            .FirstOrDefaultAsync(u => u.Email == dto.Email);
+        var usuario =
+            await _usuarioRepository
+                .GetByEmailAsync(dto.Email);
 
         if (usuario == null)
         {
@@ -91,9 +96,13 @@ public class AuthService : IAuthService
             true,
             new
             {
-                mensagem = "Login realizado com sucesso.",
+                mensagem =
+                    "Login realizado com sucesso.",
+
                 token,
+
                 usuario.Email,
+
                 usuario.Perfil
             }
         );

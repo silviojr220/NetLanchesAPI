@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NetLanchesAPI.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace NetLanchesAPI.Models;
 
@@ -11,7 +12,7 @@ public class Produto
     public string Nome { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Tipo é obrigatório")]
-    public string Tipo { get; set; } = string.Empty; // Lanche ou Bebida
+    public TipoProduto Tipo { get; set; }
 
     [Range(0.01, 1000, ErrorMessage = "Preço inválido")]
     public decimal Preco { get; set; }

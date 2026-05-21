@@ -1,31 +1,36 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NetLanchesAPI.Data;
-using NetLanchesAPI.DTOs;
+﻿using NetLanchesAPI.DTOs;
 using NetLanchesAPI.Models;
+using NetLanchesAPI.Repositories.Interfaces;
 using NetLanchesAPI.Services.Interfaces;
 
 namespace NetLanchesAPI.Services;
 
 public class ProdutoService : IProdutoService
 {
-    private readonly AppDbContext _context;
+    private readonly IProdutoRepository _produtoRepository;
 
-    public ProdutoService(AppDbContext context)
+    public ProdutoService(
+        IProdutoRepository produtoRepository
+    )
     {
-        _context = context;
+        _produtoRepository = produtoRepository;
     }
 
     public async Task<List<Produto>> GetAllAsync()
     {
-        return await _context.Produtos.ToListAsync();
+        return await _produtoRepository
+            .GetAllAsync();
     }
 
     public async Task<Produto?> GetByIdAsync(int id)
     {
-        return await _context.Produtos.FindAsync(id);
+        return await _produtoRepository
+            .GetByIdAsync(id);
     }
 
-    public async Task<Produto> CreateAsync(ProdutoDTO dto)
+    public async Task<Produto> CreateAsync(
+        ProdutoDTO dto
+    )
     {
         Produto produto = new Produto
         {
@@ -36,16 +41,18 @@ public class ProdutoService : IProdutoService
             ImagemUrl = dto.ImagemUrl
         };
 
-        _context.Produtos.Add(produto);
-
-        await _context.SaveChangesAsync();
-
-        return produto;
+        return await _produtoRepository
+            .AddAsync(produto);
     }
 
-    public async Task<Produto?> UpdateAsync(int id, ProdutoDTO dto)
+    public async Task<Produto?> UpdateAsync(
+        int id,
+        ProdutoDTO dto
+    )
     {
-        var produto = await _context.Produtos.FindAsync(id);
+        var produto =
+            await _produtoRepository
+                .GetByIdAsync(id);
 
         if (produto == null)
             return null;
@@ -56,22 +63,13 @@ public class ProdutoService : IProdutoService
         produto.Descricao = dto.Descricao;
         produto.ImagemUrl = dto.ImagemUrl;
 
-        await _context.SaveChangesAsync();
-
-        return produto;
+        return await _produtoRepository
+            .UpdateAsync(produto);
     }
 
     public async Task<bool> DeleteAsync(int id)
     {
-        var produto = await _context.Produtos.FindAsync(id);
-
-        if (produto == null)
-            return false;
-
-        _context.Produtos.Remove(produto);
-
-        await _context.SaveChangesAsync();
-
-        return true;
+        return await _produtoRepository
+            .DeleteAsync(id);
     }
 }

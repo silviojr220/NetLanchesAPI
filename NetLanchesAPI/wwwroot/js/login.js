@@ -15,7 +15,7 @@ async function login() {
 
     if (!email || !senha) {
 
-        toast(
+        mostrarToast(
             '<i class="bi bi-exclamation-triangle-fill"></i> Preencha os campos',
             'warning'
         );
@@ -43,7 +43,7 @@ async function login() {
 
         if (!res.ok) {
 
-            toast(
+            mostrarToast(
                 '<i class="bi bi-x-circle-fill"></i> Login inválido',
                 'error'
             );
@@ -55,7 +55,7 @@ async function login() {
 
         if (!data.token) {
 
-            toast(
+            mostrarToast(
                 '<i class="bi bi-x-circle-fill"></i> Token inválido',
                 'error'
             );
@@ -68,7 +68,7 @@ async function login() {
             data.token
         );
 
-        toast(
+        mostrarToast(
             '<i class="bi bi-check-circle-fill"></i> Login realizado!',
             'success'
         );
@@ -106,9 +106,44 @@ async function login() {
 
     } catch {
 
-        toast(
+        mostrarToast(
             '<i class="bi bi-wifi-off"></i> Erro na API',
             'error'
         );
     }
+}
+
+/* TOAST */
+
+function mostrarToast(mensagem, tipo = "success") {
+
+    const toast = document.getElementById("toast");
+    const toastBody = document.getElementById("toastBody");
+
+    toast.className = "toast border-0 text-white";
+
+    if (tipo === "success") {
+
+        toast.classList.add("bg-success");
+
+    } else if (tipo === "error") {
+
+        toast.classList.add("bg-danger");
+
+    } else if (tipo === "warning") {
+
+        toast.classList.add("bg-warning");
+        toast.classList.remove("text-white");
+        toast.classList.add("text-dark");
+
+    } else {
+
+        toast.classList.add("bg-primary");
+    }
+
+    toastBody.innerHTML = mensagem;
+
+    const bsToast = new bootstrap.Toast(toast);
+
+    bsToast.show();
 }

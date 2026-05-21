@@ -3,13 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NetLanchesAPI.Data;
+using NetLanchesAPI.Models;
+using NetLanchesAPI.Models.Enums;
+using NetLanchesAPI.Repositories;
+using NetLanchesAPI.Repositories.Interfaces;
 using NetLanchesAPI.Services;
 using NetLanchesAPI.Services.Interfaces;
 using System.Reflection;
 using System.Text;
-using BCrypt.Net;
-using NetLanchesAPI.Models;
-using NetLanchesAPI.Models.Enums;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,9 @@ builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IPedidoRepository,PedidoRepository>();
 
 // =========================
 // DATABASE MYSQL
@@ -172,7 +176,6 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
     });
 });
-
 
 var app = builder.Build();
 
