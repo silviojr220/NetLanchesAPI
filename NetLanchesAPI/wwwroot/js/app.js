@@ -1,11 +1,9 @@
 ﻿const api = "/api";
 
-// ══════════════════════════════════════════════
-// ⚙️ CONFIGURAÇÃO DO CHECKOUT — EDITE AQUI
-// ══════════════════════════════════════════════
+
 const CHECKOUT_URL = "https://s-istema-pagamento.vercel.app/";
 const CALLBACK_URL = "https://sistema-de-processamento-netlanches.onrender.com/api/pagamentos/callback";
-const RETURN_URL = window.location.origin + "/pedidos.html";
+const RETURN_URL = window.location.origin + "/index.html";
 const STORE_NAME = "NetLanches";
 // ══════════════════════════════════════════════
 
