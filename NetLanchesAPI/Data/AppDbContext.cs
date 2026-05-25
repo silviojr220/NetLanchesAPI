@@ -19,17 +19,22 @@ public class AppDbContext : DbContext
     public DbSet<ItemPedido> ItensPedido { get; set; }
 
     protected override void OnModelCreating(
-    ModelBuilder modelBuilder
-)
+        ModelBuilder modelBuilder
+    )
     {
         modelBuilder.Entity<Pedido>()
             .Property(p => p.Status)
             .HasConversion<string>();
 
-
         modelBuilder.Entity<Usuario>()
             .Property(u => u.Perfil)
             .HasConversion<string>();
+
+        // ADICIONE ISSO
+        modelBuilder.Entity<Produto>()
+            .Property(p => p.Tipo)
+            .HasConversion<string>();
+
 
         // PEDIDO -> USUARIO
 

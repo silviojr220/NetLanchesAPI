@@ -137,14 +137,13 @@ async function criarProduto() {
 
     const preco =
         parseFloat(
-            document.getElementById("preco").value  
+            document.getElementById("preco").value
         );
 
     const descricao =
         document.getElementById("descricao").value.trim();
 
-    const imagemUrl =
-        document.getElementById("imagemUrl").value.trim();
+    const imagemUrl = await uploadImagem();
 
     if (!nome || !tipo || isNaN(preco)) {
 
@@ -154,12 +153,14 @@ async function criarProduto() {
     }
 
     const body = {
-        nome,
-        tipo,
-        preco,
-        descricao,
-        imagemUrl
+        nome: nome,
+        tipo: tipo,
+        preco: preco,
+        descricao: descricao,
+        imagemUrl: imagemUrl
     };
+
+    console.log(body);
 
     try {
 
@@ -186,7 +187,13 @@ async function criarProduto() {
         }
 
         if (!res.ok) {
+
+            const erro = await res.text();
+
+            console.log(erro);
+
             mostrarToast("Erro ao salvar produto.");
+
             return;
         }
 
@@ -205,6 +212,54 @@ async function criarProduto() {
         console.error(erro);
 
         mostrarToast("Erro ao conectar com API.");
+    }
+}
+
+async function uploadImagem() {
+
+    const input =
+        document.getElementById("imagem");
+
+    const arquivo = input.files[0];
+
+    if (!arquivo)
+        return "";
+
+    const formData = new FormData();
+
+    formData.append("imagem", arquivo);
+
+    try {
+
+        const res = await fetch(
+            `${api}/produtos/upload`,
+            {
+                method: "POST",
+                headers: {
+                    "Authorization":
+                        "Bearer " +
+                        localStorage.getItem("token")
+                },
+                body: formData
+            }
+        );
+
+        if (!res.ok) {
+            mostrarToast("Erro ao enviar imagem.");
+            return "";
+        }
+
+        const data = await res.json();
+
+        return data.imagemUrl;
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        mostrarToast("Erro no upload.");
+
+        return "";
     }
 }
 
@@ -240,9 +295,6 @@ async function editarProduto(id) {
         document.getElementById("descricao").value =
             produto.descricao || "";
 
-        document.getElementById("imagemUrl").value =
-            produto.imagemUrl || "";
-
         const btn =
             document.getElementById("btnProduto");
 
@@ -267,7 +319,8 @@ function limparFormulario() {
     document.getElementById("tipo").value = "";
     document.getElementById("preco").value = "";
     document.getElementById("descricao").value = "";
-    document.getElementById("imagemUrl").value = "";
+
+    document.getElementById("imagem").value = "";
 
     const btn =
         document.getElementById("btnProduto");
@@ -276,42 +329,6 @@ function limparFormulario() {
         <i class="bi bi-check-circle me-2"></i>
         Cadastrar Produto
     `;
-}
-
-async function salvarEdicao(id) {
-    const nome = document.getElementById("nome").value;
-    const tipo = document.getElementById("tipo").value;
-    const preco = parseFloat(document.getElementById("preco").value);
-    const descricao = document.getElementById("descricao").value;
-
-    const token = localStorage.getItem("token");
-
-    const res = await fetch(`${api}/produtos/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-        },
-        body: JSON.stringify({ nome, tipo, preco, descricao })
-    });
-
-    if (res.ok) {
-        mostrarToast("Produto atualizado!");
-
-        // Volta o botão para Cadastrar
-        const btn = document.querySelector(`button[onclick='salvarEdicao(${id})']`);
-        btn.textContent = "Cadastrar";
-        btn.setAttribute("onclick", "criarProduto()");
-
-        document.getElementById("nome").value = "";
-        document.getElementById("tipo").value = "";
-        document.getElementById("preco").value = "";
-        document.getElementById("descricao").value = "";
-
-        carregarProdutos();
-    } else {
-        mostrarToast("Erro ao atualizar produto");
-    }
 }
 
 async function deletar(id) {

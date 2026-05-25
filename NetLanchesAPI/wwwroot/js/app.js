@@ -463,7 +463,7 @@ async function finalizarPedido() {
     try {
 
         const response =
-            await fetch(`${api}/Pedidos`, {
+            await fetch(`${api}/pedidos`, {
 
                 method: "POST",
 

@@ -9,6 +9,7 @@ using NetLanchesAPI.Repositories;
 using NetLanchesAPI.Repositories.Interfaces;
 using NetLanchesAPI.Services;
 using NetLanchesAPI.Services.Interfaces;
+using System.Text.Json.Serialization;
 using System.Reflection;
 using System.Text;
 
@@ -43,8 +44,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // CONTROLLERS
 // =========================
 
-builder.Services.AddControllers();
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(
+            new JsonStringEnumConverter()
+        );
 
+        options.JsonSerializerOptions.ReferenceHandler =
+            ReferenceHandler.IgnoreCycles;
+    });
 
 // =========================
 // JWT AUTHENTICATION

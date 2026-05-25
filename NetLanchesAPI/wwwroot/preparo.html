@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preparo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --laranja: #fd7e14;
+        }
+
+        body {
+            background: #f5f5f5;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #1f1f1f;
+            color: white;
+            padding: 30px 20px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .menu-item {
+            padding: 15px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: .2s;
+            text-decoration: none;
+            color: white;
+        }
+
+            .menu-item:hover {
+                background: rgba(255,255,255,.08);
+                color: white;
+            }
+
+            .menu-item.active {
+                background: var(--laranja);
+                color: white;
+            }
+
+        .main {
+            flex: 1;
+            padding: 35px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(0,0,0,.5), rgba(0,0,0,.5)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836');
+            background-size: cover;
+            background-position: center;
+            border-radius: 22px;
+            padding: 45px;
+            color: white;
+            margin-bottom: 35px;
+        }
+
+            .hero h1 {
+                font-size: 2.5rem;
+                font-weight: bold;
+            }
+
+        .pedido-card {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.07);
+            transition: .25s;
+        }
+
+            .pedido-card:hover {
+                transform: translateY(-3px);
+            }
+
+        .item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .badge-preparo {
+            background: #fff3cd;
+            color: #856404;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: .8rem;
+            font-weight: bold;
+        }
+
+        .badge-pronto {
+            background: #d1e7dd;
+            color: #0f5132;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: .8rem;
+            font-weight: bold;
+        }
+
+        .btn-confirmar {
+            background: #198754;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: bold;
+            transition: .2s;
+        }
+
+            .btn-confirmar:hover {
+                background: #146c43;
+                transform: translateY(-2px);
+            }
+
+            .btn-confirmar:disabled {
+                background: #adb5bd;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        @media(max-width: 992px) {
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+
+        <aside class="sidebar">
+            <div class="logo">🧑‍💼 Funcionário</div>
+            <div class="menu">
+                <a class="menu-item" href="funcionario.html">🏠 Início</a>
+                <a class="menu-item" href="cardapio-func.html">🍽️ Cardápio</a>
+                <a class="menu-item active" href="preparo.html">🔥 Preparo</a>
+                <a class="menu-item" href="pedidos-funcionario.html">📦 Pedidos</a>
+            </div>
+        </aside>
+
+        <main class="main">
+            <div class="topbar">
+                <h4 class="mb-0">🔥 Tela de Preparo</h4>
+                <button class="btn btn-danger" onclick="logout()">Sair</button>
+            </div>
+
+            <div class="hero">
+                <h1>Preparo</h1>
+                <p>Confirme quando um pedido estiver pronto para entrega.</p>
+            </div>
+
+            <!-- Filtro de status -->
+            <div class="d-flex gap-2 mb-4 flex-wrap">
+                <button class="btn btn-warning btn-sm fw-bold" onclick="filtrar('EmPreparo')">🔥 Em Preparo</button>
+                <button class="btn btn-success btn-sm fw-bold" onclick="filtrar('Pronto')">✅ Prontos</button>
+                <button class="btn btn-outline-secondary btn-sm" onclick="filtrar('todos')">Todos</button>
+            </div>
+
+            <div id="pedidos" class="row g-4">
+                <div class="col-12 text-center py-5 text-muted">Carregando pedidos...</div>
+            </div>
+        </main>
+
+    </div>
+    <script src="preparo.js"></script>
+</body>
+</html>

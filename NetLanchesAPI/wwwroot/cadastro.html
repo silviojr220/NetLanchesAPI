@@ -8,13 +8,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Login • NetLanches</title>
-
-    <!-- FAVICON -->
-
-    <link rel="icon"
-          type="image/png"
-          href="img/logo.png">
+    <title>Cadastro • NetLanches</title>
 
     <!-- BOOTSTRAP -->
 
@@ -42,7 +36,7 @@
             min-height: 100vh;
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(rgba(0,0,0,.55), rgba(0,0,0,.55)), url('https://images.unsplash.com/photo-1550547660-d9450f859349');
+            background: linear-gradient( rgba(0,0,0,.55), rgba(0,0,0,.55) ), url('https://images.unsplash.com/photo-1550547660-d9450f859349');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -53,7 +47,7 @@
 
         /* CARD */
 
-        .login-box {
+        .box {
             width: 100%;
             max-width: 430px;
             padding: 42px;
@@ -160,7 +154,7 @@
 
         /* BOTÃO */
 
-        .btn-login {
+        .btn-main {
             height: 56px;
             border: none;
             border-radius: 18px;
@@ -171,7 +165,7 @@
             transition: .25s;
         }
 
-            .btn-login:hover {
+            .btn-main:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 12px 24px rgba(255,193,7,.35);
             }
@@ -204,7 +198,7 @@
 
         @media (max-width: 500px) {
 
-            .login-box {
+            .box {
                 padding: 28px;
             }
         }
@@ -214,25 +208,25 @@
 
 <body>
 
-    <div class="login-box">
+    <div class="box">
 
         <!-- LOGO -->
 
         <div class="logo">
 
-            <i class="bi bi-bag-fill"></i>
+            <i class="bi bi-bag-plus-fill"></i>
 
         </div>
 
         <h2>
 
-            Bem-vindo
+            Criar Conta
 
         </h2>
 
         <div class="subtitle">
 
-            Faça login para acessar o NetLanches 🍔
+            Faça seu cadastro para começar seus pedidos 🍔
 
         </div>
 
@@ -254,6 +248,31 @@
                        id="email"
                        class="form-control"
                        placeholder="Digite seu email">
+
+            </div>
+
+        </div>
+
+        <!-- TELEFONE -->
+
+        <div class="form-group">
+
+            <div class="label">
+
+                Telefone
+
+            </div>
+
+            <div class="input-wrapper">
+
+                <i class="bi bi-telephone-fill"></i>
+
+                <input type="tel"
+                       id="telefone"
+                       class="form-control"
+                       placeholder="(00) 00000-0000"
+                       maxlength="15"
+                       oninput="formatarTelefone(this)">
 
             </div>
 
@@ -291,12 +310,12 @@
 
         <!-- BOTÃO -->
 
-        <button class="btn btn-login w-100"
-                onclick="login()">
+        <button class="btn btn-main w-100"
+                onclick="cadastrar()">
 
-            <i class="bi bi-box-arrow-in-right me-2"></i>
+            <i class="bi bi-check-circle-fill me-2"></i>
 
-            Entrar
+            Criar Conta
 
         </button>
 
@@ -304,11 +323,11 @@
 
         <div class="links">
 
-            Não possui conta?
+            Já possui conta?
 
-            <a href="cadastro.html">
+            <a href="login.html">
 
-                Criar conta
+                Fazer login
 
             </a>
 
@@ -325,9 +344,7 @@
 
             <div class="d-flex">
 
-                <div class="toast-body"
-                     id="toastBody">
-                </div>
+                <div class="toast-body"></div>
 
                 <button type="button"
                         class="btn-close btn-close-white me-2 m-auto"
@@ -340,21 +357,16 @@
 
     </div>
 
-    <!-- BOOTSTRAP -->
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <!-- SCRIPT -->
 
     <script>
 
         function toast(msg, tipo = "warning") {
 
-            const t =
-                document.getElementById("toast");
+            const t = document.getElementById("toast");
 
             const body =
-                document.getElementById("toastBody");
+                t.querySelector(".toast-body");
 
             t.className =
                 "toast border-0 text-white";
@@ -370,9 +382,7 @@
             } else {
 
                 t.classList.add("bg-warning");
-
                 t.classList.remove("text-white");
-
                 t.classList.add("text-dark");
             }
 
@@ -405,11 +415,169 @@
             }
         }
 
+        function formatarTelefone(input) {
+
+            let valor =
+                input.value.replace(/\D/g, "");
+
+            valor =
+                valor.substring(0, 11);
+
+            if (valor.length > 10) {
+
+                valor = valor.replace(
+                    /^(\d{2})(\d{5})(\d{4}).*/,
+                    "($1) $2-$3"
+                );
+
+            } else if (valor.length > 6) {
+
+                valor = valor.replace(
+                    /^(\d{2})(\d{4})(\d{0,4}).*/,
+                    "($1) $2-$3"
+                );
+
+            } else if (valor.length > 2) {
+
+                valor = valor.replace(
+                    /^(\d{2})(\d{0,5})/,
+                    "($1) $2"
+                );
+
+            } else {
+
+                valor = valor.replace(
+                    /^(\d*)/,
+                    "($1"
+                );
+            }
+
+            input.value = valor;
+        }
+
+        async function cadastrar() {
+
+            const email =
+                document.getElementById("email")
+                    .value
+                    .trim();
+
+            const senha =
+                document.getElementById("senha")
+                    .value;
+
+            const telefone =
+                document.getElementById("telefone")
+                    .value
+                    .replace(/\D/g, "");
+
+            if (!email ||
+                !senha ||
+                !telefone) {
+
+                toast(
+                    '<i class="bi bi-exclamation-triangle-fill"></i> Preencha todos os campos',
+                    'warning'
+                );
+
+                return;
+            }
+
+            if (
+                telefone.length < 10 ||
+                telefone.length > 11
+            ) {
+
+                toast(
+                    '<i class="bi bi-telephone-x-fill"></i> Telefone inválido',
+                    'warning'
+                );
+
+                return;
+            }
+
+            try {
+
+                const btn =
+                    document.querySelector(".btn-main");
+
+                btn.disabled = true;
+
+                btn.innerHTML = `
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                        Criando conta...
+                    `;
+
+                const res = await fetch(
+                    "/api/Auth/registro",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            email,
+                            senha,
+                            telefone,
+                            perfil: "CLIENTE"
+                        })
+                    }
+                );
+
+                if (!res.ok) {
+
+                    const erro =
+                        await res.text();
+
+                    console.log(erro);
+
+                    toast(
+                        '<i class="bi bi-x-circle-fill"></i> Erro ao cadastrar',
+                        'error'
+                    );
+
+                    btn.disabled = false;
+
+                    btn.innerHTML = `
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            Criar Conta
+                        `;
+
+                    return;
+                }
+
+                toast(
+                    '<i class="bi bi-check-circle-fill"></i> Conta criada com sucesso!',
+                    'success'
+                );
+
+                setTimeout(() => {
+
+                    window.location.href =
+                        "login.html";
+
+                }, 1200);
+
+            } catch (erro) {
+
+                console.error(erro);
+
+                toast(
+                    '<i class="bi bi-wifi-off"></i> Erro na API',
+                    'error'
+                );
+            }
+        }
+
     </script>
 
-    <!-- LOGIN JS -->
+    <!-- BOOTSTRAP -->
 
-    <script src="js/login.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 
