@@ -109,7 +109,7 @@ async function carregarAdms() {
 
         const data = await obterJson(res);
 
-        const adms = data.dados || [];
+        const adms = Array.isArray(data) ? data : [];
 
         const div = document.getElementById("listaAdms");
 
@@ -172,7 +172,7 @@ async function salvarEdicaoAdm(id) {
     const email = document.getElementById(`edit-adm-email-${id}`).value.trim();
     const telefone = document.getElementById(`edit-adm-tel-${id}`).value.trim();
 
-    const res = await fetch(`${api}/usuario/adm/${id}`, {
+    const res = await fetch(`${api}/usuario/${id}`, {
         method: "PUT",
         headers: getHeaders(),
         body: JSON.stringify({ email, telefone })
@@ -192,7 +192,7 @@ async function removerAdm(id) {
 
     if (!confirm("Tem certeza que deseja remover este ADM?")) return;
 
-    const res = await fetch(`${api}/usuario/adm/${id}`, {
+    const res = await fetch(`${api}/usuario/${id}`, {
         method: "DELETE",
         headers: getHeaders()
     });
@@ -218,7 +218,7 @@ async function criarAdm() {
             return;
         }
 
-        const res = await fetch(`${api}/usuario/criar-adm`, {
+        const res = await fetch(`${api}/usuario/adm`, {
             method: "POST",
             headers: getHeaders(),
             body: JSON.stringify({ email, senha, telefone })
@@ -257,7 +257,7 @@ async function carregarClientes() {
 
         const data = await obterJson(res);
 
-        const clientes = data.dados || [];
+        const clientes = Array.isArray(data) ? data : [];
 
         const div = document.getElementById("listaClientes");
 
@@ -319,7 +319,7 @@ async function salvarEdicaoCliente(id) {
     const email = document.getElementById(`edit-cli-email-${id}`).value.trim();
     const telefone = document.getElementById(`edit-cli-tel-${id}`).value.trim();
 
-    const res = await fetch(`${api}/usuario/cliente/${id}`, {
+    const res = await fetch(`${api}/usuario/${id}`, {
         method: "PUT",
         headers: getHeaders(),
         body: JSON.stringify({ email, telefone })
@@ -339,7 +339,7 @@ async function removerCliente(id) {
 
     if (!confirm("Tem certeza que deseja remover este cliente?")) return;
 
-    const res = await fetch(`${api}/usuario/cliente/${id}`, {
+    const res = await fetch(`${api}/usuario/${id}`, {
         method: "DELETE",
         headers: getHeaders()
     });
@@ -364,7 +364,7 @@ async function carregarFuncionarios() {
 
         const data = await obterJson(res);
 
-        const funcionarios = data.dados || [];
+        const funcionarios = Array.isArray(data) ? data : [];
 
         const div = document.getElementById("listaFuncionarios");
 
@@ -426,7 +426,7 @@ async function salvarEdicaoFuncionario(id) {
     const email = document.getElementById(`edit-func-email-${id}`).value.trim();
     const telefone = document.getElementById(`edit-func-tel-${id}`).value.trim();
 
-    const res = await fetch(`${api}/usuario/funcionario/${id}`, {
+    const res = await fetch(`${api}/usuario/${id}`, {
         method: "PUT",
         headers: getHeaders(),
         body: JSON.stringify({ email, telefone })
@@ -475,7 +475,7 @@ async function criarFuncionario() {
             return;
         }
 
-        const res = await fetch(`${api}/usuario/criar-funcionario`, {
+        const res = await fetch(`${api}/usuario/funcionario`, {
             method: "POST",
             headers: getHeaders(),
             body: JSON.stringify({ email, senha, telefone })
