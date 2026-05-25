@@ -1,5 +1,14 @@
 ﻿const api = "/api";
 
+// ══════════════════════════════════════════════
+// ⚙️ CONFIGURAÇÃO DO CHECKOUT — EDITE AQUI
+// ══════════════════════════════════════════════
+const CHECKOUT_URL = "https://s-istema-pagamento.vercel.app/";
+const CALLBACK_URL = "https://sistema-de-processamento-netlanches.onrender.com/api/pagamentos/callback";
+const RETURN_URL = window.location.origin + "/pedidos.html";
+const STORE_NAME = "NetLanches";
+// ══════════════════════════════════════════════
+
 let produtosCache = [];
 let carrinho = [];
 let produtoAtual = null;
@@ -194,8 +203,8 @@ function renderCarousel() {
 
                 <div class="preco">
                     R$ ${Number(produto.preco)
-                        .toFixed(2)
-                        .replace(".", ",")}
+                .toFixed(2)
+                .replace(".", ",")}
                 </div>
 
             </div>
@@ -267,8 +276,8 @@ function renderProduto() {
 
                 <div class="preco">
                     R$ ${Number(produtoAtual.preco)
-                        .toFixed(2)
-                        .replace(".", ",")}
+            .toFixed(2)
+            .replace(".", ",")}
                 </div>
 
                 <div class="quantidade">
@@ -399,8 +408,8 @@ function renderCarrinho() {
                 <div>
 
                     R$ ${subtotal
-                        .toFixed(2)
-                        .replace(".", ",")}
+                .toFixed(2)
+                .replace(".", ",")}
 
                     <br>
 
@@ -494,14 +503,32 @@ async function finalizarPedido() {
             return;
         }
 
-        mostrarToast(
-            "Pedido realizado com sucesso.",
-            "success"
+        // ── Pedido criado — redireciona para o checkout ──
+        const pedido = await response.json();
+
+        const total = carrinho.reduce(
+            (acc, item) => acc + item.preco * item.quantidade, 0
         );
 
-        carrinho = [];
+        const descricao = carrinho
+            .map(i => `${i.quantidade}x ${i.nome}`)
+            .join(", ");
 
-        renderCarrinho();
+        const params = new URLSearchParams({
+            orderId: pedido.pedidoId ?? pedido.id ?? "0",
+            amount: total.toFixed(2),
+            description: descricao,
+            store: STORE_NAME,
+            callbackUrl: CALLBACK_URL,
+            returnUrl: RETURN_URL,
+            token: token
+        });
+
+        mostrarToast("Redirecionando para o pagamento...");
+
+        setTimeout(() => {
+            window.location.href = `${CHECKOUT_URL}?${params.toString()}`;
+        }, 1000);
 
     } catch {
 
